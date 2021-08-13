@@ -6,8 +6,8 @@
 </template>
 
 <script>
-import WrapperRows from '../components/wrapperRows'
-import Header from '../components/header'
+import WrapperRows from '@/components/moving_balls/wrapperRows'
+import Header from '@/components/moving_balls/header'
 
 export default {
   name: 'App',
@@ -18,17 +18,12 @@ export default {
 }
 </script>
 
-<style>
-*{
-  box-sizing: border-box;
-}
+<style scoped>
 
 #game {
   margin-top: 20px;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  max-width: 500px;
+  width: 100%;
   padding: 10px;
   background: rgb(117, 158, 158);
   align-self: center;

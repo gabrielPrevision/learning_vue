@@ -2,15 +2,15 @@
   div.wrapperBalls
     MovingBall(
         v-for="ballConfig in ballList"
-        v-bind:isPointBall="ballConfig.isPointBall"
-        v-bind:speed="ballConfig.speed"
+        :isPointBall="ballConfig.isPointBall"
+        :speed="ballConfig.speed"
         v-on:hitBall="ballConfig.isPointBall ? hitRightBall($event) : hitWrongBall($event)"
     )
   
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
+import { mapMutations, mapState } from 'vuex'
 import MovingBall from './movingBall'
 
 export default {
@@ -26,6 +26,13 @@ export default {
     }
   },
   computed: {
+    ...mapState('movingBalls',{
+      level: state => state.level,
+      score: state => state.score
+    }),
+    ...mapState('results',{
+      history: state => state.history,
+    }),
     ballList(){
           const ballConfigList = []
 
@@ -41,19 +48,39 @@ export default {
   },
   methods: {
     hitRightBall(){
-        this.hits++
+      this.hits++
 
-        this.dificult++
+      this.dificult++
 
-        this.toScore()
+      this.toScore()
 
-        if(this.hits === this.ballsNumber) this.completeRow()
+      if(this.hits === this.ballsNumber) this.$emit('completeRow')
+
+      if(this.level > 10) {
+        this.finishMatch()
+        console.log(this.history)
+        alert('Você venceu')
+      }
     },
     hitWrongBall(){
-      this.restartGame()
+      this.hits = 0
+      this.dificult = 1
+      this.finishMatch()
       alert('Você perdeu!')
     },
-    ...mapMutations({toScore: 'toScore', completeRow: 'completeRow', restartGame: 'restartGame'})
+    finishMatch(){
+      const todayDate = new Date()
+
+      const resultInfo = {
+        level: this.level,
+        score: this.score,
+        date: `${todayDate.getDate().toString()}/${(todayDate.getMonth()+1).toString()}/${todayDate.getFullYear()}`
+      }
+      this.restartGame()
+      this.saveResult(resultInfo)
+    },
+    ...mapMutations('movingBalls',{toScore: 'toScore', completeRow: 'completeRow', restartGame: 'restartGame'}),
+    ...mapMutations('results',{saveResult: 'saveResult'})
   },
 }
 </script>

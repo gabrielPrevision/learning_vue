@@ -9,7 +9,7 @@ import { mapState } from 'vuex'
 
 export default {
   name: 'Header',
-  computed: mapState({
+  computed: mapState('movingBalls',{
     score: state => state.score,
     level: state => state.level
   })

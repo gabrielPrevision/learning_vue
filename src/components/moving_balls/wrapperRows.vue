@@ -4,11 +4,13 @@
         RowWrapperBalls(
           v-for="n in level <= 5 ? level : 5"
           :key="`row_${n == 1 ? firstId : n}`"
+          v-on:completeRow="completeRow"
         )
       div.wrapperRows(v-if="useSecondWrapper")
         RowWrapperBalls(
           v-for="n in level - 5"
           :key="`row_${n + 5}`"
+          v-on:completeRow="completeRow"
         )
 </template>
 
@@ -27,7 +29,7 @@ export default {
     }
   },
   computed: {
-    ...mapState({
+    ...mapState('movingBalls',{
       level: state => state.level,
       initiated: state => state.initiated
     }),
@@ -36,7 +38,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations({initiate: 'initiate'})
+    ...mapMutations('movingBalls', {initiate: 'initiate', completeRow: 'completeRow'})
   },
   watch: {
     initiated: function () {
@@ -53,8 +55,8 @@ export default {
 <style>
   #container{
     position: relative;
-    width: 100%;
-    height: 500px;
+    width: 250px;
+    height: 250px;
   }
   .wrapperRows{
     display: flex;
